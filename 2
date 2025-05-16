@@ -1,0 +1,29 @@
+import sys
+sys.setrecursionlimit(10**6)
+
+n, m = map(int, sys.stdin.readline().split())
+graph = [[] for _ in range(n)]
+for _ in range(m):
+    u, v = map(int, sys.stdin.readline().split())
+    graph[u - 1].append(v - 1)
+    graph[v - 1].append(u - 1)
+
+visited = [False] * n
+components = []
+
+def dfs(v, comp):
+    visited[v] = True
+    comp.append(v + 1)
+    for neighbor in graph[v]:
+        if not visited[neighbor]:
+            dfs(neighbor, comp)
+
+for i in range(n):
+    if not visited[i]:
+        comp = []
+        dfs(i, comp)
+        components.append(sorted(comp))
+
+print(len(components))
+for comp in components:
+    print(len(comp), *comp)
