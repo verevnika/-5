@@ -1,0 +1,44 @@
+import sys
+sys.setrecursionlimit(10**7)
+
+n = int(sys.stdin.readline())
+graph = [list(map(int, sys.stdin.readline().split())) for _ in range(n)]
+
+visited = [False] * n
+parent = [-1] * n
+cycle = []
+
+def dfs(u):
+    visited[u] = True
+    for v in range(n):
+        if graph[u][v] == 0:
+            continue
+        if not visited[v]:
+            parent[v] = u
+            if dfs(v):
+                return True
+        elif v != parent[u] and not cycle:
+            # нашли цикл
+            # восстановим путь от u до v
+            curr = u
+            cycle.append(v)
+            while curr != v:
+                cycle.append(curr)
+                curr = parent[curr]
+            cycle.reverse()
+            return True
+    return False
+
+found = False
+for i in range(n):
+    if not visited[i]:
+        if dfs(i):
+            found = True
+            break
+
+if not found:
+    print("NO")
+else:
+    print("YES")
+    print(len(cycle))
+    print(*[x+1 for x in cycle])
