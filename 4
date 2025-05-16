@@ -1,0 +1,43 @@
+import sys
+from collections import deque
+
+N = int(sys.stdin.readline())
+adj = [list(map(int, sys.stdin.readline().split())) for _ in range(N)]
+s, e = map(int, sys.stdin.readline().split())
+
+s -= 1
+e -= 1
+
+visited = [False] * N
+prev = [-1] * N
+
+def bfs(start, end):
+    queue = deque([start])
+    visited[start] = True
+
+    while queue:
+        u = queue.popleft()
+        if u == end:
+            break
+        for v in range(N):
+            if adj[u][v] == 1 and not visited[v]:
+                visited[v] = True
+                prev[v] = u
+                queue.append(v)
+
+bfs(s, e)
+
+if not visited[e]:
+    print(-1)
+else:
+    path = []
+    cur = e
+    while cur != -1:
+        path.append(cur + 1)
+        cur = prev[cur]
+    path.reverse()
+
+    length = len(path) - 1
+    print(length)
+    if length > 0:
+        print(*path)
